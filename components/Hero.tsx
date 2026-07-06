@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { site } from "@/data/site";
 import Icon from "./Icon";
+import PointerSpotlight from "./PointerSpotlight";
 
 const stats = [
   { value: "5.0/5.0", label: "GPA · Red Diploma" },
@@ -11,7 +12,7 @@ const stats = [
 export default function Hero() {
   return (
     <section
-      className="relative overflow-hidden"
+      className="has-cursor-glow relative overflow-hidden"
       style={{ background: "linear-gradient(180deg, var(--header-tint) 0%, var(--page) 100%)" }}
     >
       <div className="hero-bg" aria-hidden="true">
@@ -19,6 +20,7 @@ export default function Hero() {
         <span className="blob blob-2" />
         <span className="grid-overlay" />
       </div>
+      <PointerSpotlight glow />
 
       <div className="relative mx-auto grid w-full max-w-[1140px] items-center gap-10 px-5 pb-16 pt-14 sm:px-6 sm:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12 lg:px-8 lg:pb-24 lg:pt-24">
         <div>

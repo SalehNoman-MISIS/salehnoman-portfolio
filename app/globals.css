@@ -33,43 +33,44 @@
   --shadow-hover: 0 4px 12px rgb(18 62 115 / 0.08), 0 18px 40px rgb(18 62 115 / 0.12);
 }
 
+/* Deep, high-contrast dark theme. */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0e1b2a;
-  --header-tint: #13233a;
-  --card: #13233a;
-  --hairline: #24405f;
-  --ink: #e6eef7;
-  --muted: #9fb2c8;
-  --navy: #cfe2f7;
-  --accent: #4c90db;
-  --accent-strong: #6ba7e6;
-  --bar-start: #3e7cb8;
-  --bar-end: #7fb2e4;
-  --pill-bg: #17293f;
-  --nav-bg: rgb(14 27 42 / 0.82);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
-  --shadow-hover: 0 6px 16px rgb(0 0 0 / 0.4), 0 22px 48px rgb(0 0 0 / 0.5);
+  --page: #060a12;
+  --header-tint: #0b1220;
+  --card: #0d1526;
+  --hairline: #1e2c42;
+  --ink: #e9eff8;
+  --muted: #8fa2ba;
+  --navy: #d5e5f9;
+  --accent: #4f96e2;
+  --accent-strong: #74afea;
+  --bar-start: #3b7bc0;
+  --bar-end: #86b9ee;
+  --pill-bg: #111d31;
+  --nav-bg: rgb(6 10 18 / 0.85);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 34px rgb(0 0 0 / 0.5);
+  --shadow-hover: 0 6px 18px rgb(0 0 0 / 0.5), 0 26px 56px rgb(0 0 0 / 0.62);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
-    --page: #0e1b2a;
-    --header-tint: #13233a;
-    --card: #13233a;
-    --hairline: #24405f;
-    --ink: #e6eef7;
-    --muted: #9fb2c8;
-    --navy: #cfe2f7;
-    --accent: #4c90db;
-    --accent-strong: #6ba7e6;
-    --bar-start: #3e7cb8;
-    --bar-end: #7fb2e4;
-    --pill-bg: #17293f;
-    --nav-bg: rgb(14 27 42 / 0.82);
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
-    --shadow-hover: 0 6px 16px rgb(0 0 0 / 0.4), 0 22px 48px rgb(0 0 0 / 0.5);
+    --page: #060a12;
+    --header-tint: #0b1220;
+    --card: #0d1526;
+    --hairline: #1e2c42;
+    --ink: #e9eff8;
+    --muted: #8fa2ba;
+    --navy: #d5e5f9;
+    --accent: #4f96e2;
+    --accent-strong: #74afea;
+    --bar-start: #3b7bc0;
+    --bar-end: #86b9ee;
+    --pill-bg: #111d31;
+    --nav-bg: rgb(6 10 18 / 0.85);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 34px rgb(0 0 0 / 0.5);
+    --shadow-hover: 0 6px 18px rgb(0 0 0 / 0.5), 0 26px 56px rgb(0 0 0 / 0.62);
   }
 }
 
@@ -214,6 +215,86 @@ html.js [data-reveal].is-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   .blob { animation: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Mouse-responsive effects (pointer devices only; disabled for reduced motion).
+--------------------------------------------------------------------------- */
+/* Cursor-following spotlight glow on cards. --mx/--my are set in JS. */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 2;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    360px circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in srgb, var(--accent) 12%, transparent),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::before,
+  .spotlight:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Hero cursor glow follows the pointer across the whole hero. */
+.cursor-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    500px circle at var(--mx, 50%) var(--my, 30%),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .has-cursor-glow:hover .cursor-glow {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before,
+  .spotlight::after,
+  .cursor-glow {
+    display: none;
+  }
+}
+
+/* Nav scroll-progress bar. */
+.scroll-progress {
+  transform-origin: 0 50%;
 }
 
 /* Minimal prose styling for markdown-ish deep-dive blocks. */

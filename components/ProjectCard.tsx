@@ -1,6 +1,7 @@
 import type { Project } from "@/data/projects";
 import SmartImage from "./SmartImage";
 import Icon from "./Icon";
+import PointerSpotlight from "./PointerSpotlight";
 
 export default function ProjectCard({ project, index = 0 }: { project: Project; index?: number }) {
   const href = `/projects/${project.slug}`;
@@ -10,11 +11,12 @@ export default function ProjectCard({ project, index = 0 }: { project: Project; 
 
   return (
     <article
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--hairline)] bg-[var(--card)] transition-all duration-300 hover:-translate-y-1"
+      className="spotlight group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--hairline)] bg-[var(--card)] transition-all duration-300 hover:-translate-y-1"
       style={{ boxShadow: "var(--shadow)", borderLeft: "4px solid var(--accent)", "--reveal-delay": `${(index % 3) * 80}ms` }}
       data-reveal
     >
-      <a href={href} className="flex h-full flex-col">
+      <PointerSpotlight />
+      <a href={href} className="relative z-[1] flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden border-b border-[var(--hairline)] bg-[var(--header-tint)]">
           <SmartImage
             src={thumb}

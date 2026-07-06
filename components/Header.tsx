@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
 import { site, navLinks } from "@/data/site";
 import Icon from "./Icon";
 
@@ -16,6 +17,9 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
   const [active, setActive] = useState<string>("");
   const [isDark, setIsDark] = useState(false);
 
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
+
   const hrefFor = (hash: string) => (onHome ? hash : `/${hash}`);
 
   useEffect(() => {
@@ -26,13 +30,10 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // active-section spy (homepage only)
   useEffect(() => {
     if (!onHome) return;
     const ids = navLinks.map((l) => l.href.replace("#", ""));
-    const sections = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (!sections.length) return;
     const spy = new IntersectionObserver(
       (entries) => {
@@ -57,19 +58,32 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
   };
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-all duration-300 ${
+    <motion.header
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-[border-color,box-shadow] duration-300 ${
         scrolled ? "border-[var(--hairline)] shadow-sm" : "border-transparent"
       }`}
       style={{ backgroundColor: "var(--nav-bg)" }}
     >
       <div className="mx-auto flex h-16 w-full max-w-[1140px] items-center justify-between gap-3 px-5 sm:px-6 lg:px-8">
-        <a href="/" className="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
-          <span className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold tracking-tight text-white shadow-sm transition-transform group-hover:scale-105">
+        <motion.a
+          href="/"
+          className="group flex items-center gap-2.5"
+          aria-label={`${site.name} — home`}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          <motion.span
+            className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold tracking-tight text-white shadow-sm"
+            whileHover={{ rotate: -6 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          >
             {site.monogram}
-          </span>
+          </motion.span>
           <span className="hidden text-sm font-bold text-[var(--navy)] sm:block">{site.name}</span>
-        </a>
+        </motion.a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
           {navLinks.map((l) => {
@@ -78,37 +92,46 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
               <a
                 key={l.href}
                 href={hrefFor(l.href)}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                  on
-                    ? "bg-[var(--header-tint)] text-[var(--accent-strong)]"
-                    : "text-[var(--muted)] hover:text-[var(--accent-strong)]"
+                className={`relative rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                  on ? "text-[var(--accent-strong)]" : "text-[var(--muted)] hover:text-[var(--accent-strong)]"
                 }`}
               >
-                {l.label}
+                {on && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-full bg-[var(--header-tint)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{l.label}</span>
               </a>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
+          <motion.a
             href={site.resume.en}
             download
-            className="hidden items-center gap-1.5 rounded-full bg-[var(--accent)] px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] sm:inline-flex"
+            className="hidden items-center gap-1.5 rounded-full bg-[var(--accent)] px-3.5 py-2 text-sm font-semibold text-white shadow-sm sm:inline-flex"
+            whileHover={{ y: -2, boxShadow: "0 8px 20px rgb(31 95 166 / 0.35)" }}
+            whileTap={{ scale: 0.96 }}
           >
             <Icon name="download" size={16} />
             <span className="hidden lg:inline">Résumé</span>
             <span className="lg:hidden">CV</span>
-          </a>
-          <button
+          </motion.a>
+          <motion.button
             type="button"
             onClick={toggleTheme}
-            className="grid size-9 place-items-center rounded-full border border-[var(--hairline)] bg-[var(--pill-bg)] text-[var(--navy)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+            className="grid size-9 place-items-center rounded-full border border-[var(--hairline)] bg-[var(--pill-bg)] text-[var(--navy)]"
             aria-label="Toggle dark mode"
             title="Toggle dark mode"
+            whileHover={{ rotate: 18, scale: 1.05 }}
+            whileTap={{ scale: 0.9 }}
           >
             <Icon name={isDark ? "sun" : "moon"} size={18} />
-          </button>
+          </motion.button>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -121,10 +144,20 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
         </div>
       </div>
 
+      {/* scroll-progress bar */}
+      <motion.div
+        className="scroll-progress absolute bottom-0 left-0 h-0.5 w-full origin-left"
+        style={{ scaleX: progress, background: "linear-gradient(90deg, var(--bar-start), var(--accent))" }}
+        aria-hidden="true"
+      />
+
       {open && (
-        <nav
+        <motion.nav
           aria-label="Mobile"
-          className="border-t border-[var(--hairline)] bg-[var(--page)] px-5 pb-4 pt-2 md:hidden"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          className="overflow-hidden border-t border-[var(--hairline)] bg-[var(--page)] px-5 pb-4 pt-2 md:hidden"
         >
           <ul className="flex flex-col">
             {navLinks.map((l) => (
@@ -149,8 +182,8 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
               </a>
             </li>
           </ul>
-        </nav>
+        </motion.nav>
       )}
-    </header>
+    </motion.header>
   );
 }
