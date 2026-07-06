@@ -46,9 +46,42 @@ npm run gen:assets   # regenerate diagrams, favicons, OG image, headshot placeho
 
 ---
 
-## Editing content (no components to touch)
+## Editing content
 
-All copy lives in typed data files under [`data/`](data/):
+Two ways — a visual admin panel, or editing files directly.
+
+### Option 1 — the `/admin` panel (recommended)
+
+A password-protected GUI at **`/admin`** lets you edit **every section** (site,
+about, skills, experience, education, projects, more builds) with forms — add /
+remove / reorder list items, toggle flags, etc. Clicking **Save** commits the
+change to your GitHub repo, which triggers a Vercel redeploy — so the live site
+updates in about a minute. Only someone with your admin password can edit; the
+page is `noindex`.
+
+**Setup (once):** set these environment variables (see `.env.example`):
+
+| Variable | Where | Purpose |
+|----------|-------|---------|
+| `ADMIN_PASSWORD` | Vercel + `.env.local` | Gate for `/admin` (min 6 chars). |
+| `GITHUB_TOKEN` | Vercel only | Fine-grained token with **Contents: Read and write** on this repo, so Save can commit. |
+| `GITHUB_REPO` | optional | `owner/repo` (defaults to this repo). |
+| `SESSION_SECRET` | optional | Extra cookie-signing secret (derived from the password if unset). |
+
+- **In Vercel:** Project → **Settings → Environment Variables** → add
+  `ADMIN_PASSWORD` and `GITHUB_TOKEN` → redeploy.
+- **Locally:** `cp .env.example .env.local`, set `ADMIN_PASSWORD`, run `npm run dev`,
+  open `http://localhost:3000/admin`. With no `GITHUB_TOKEN` locally, Save writes
+  straight to your `content/*.json` files instead of committing.
+
+> Create the token at **GitHub → Settings → Developer settings → Fine-grained
+> tokens** → Repository access: only `salehnoman-portfolio` → Permissions →
+> Contents: Read and write.
+
+### Option 2 — edit the content files
+
+The content lives as JSON under [`content/`](content/) and is read through typed
+modules in [`data/`](data/):
 
 | File | What it controls |
 |------|------------------|
@@ -103,6 +136,9 @@ gh repo create salehnoman-portfolio --public --source=. --remote=origin --push
    (Build Command `next build`, Output `.next`, Install `npm install`).
 4. Click **Deploy**. In ~1 minute you get a live URL like
    `https://salehnoman-portfolio.vercel.app`.
+5. **(For the `/admin` editor)** In **Settings → Environment Variables** add
+   `ADMIN_PASSWORD` and `GITHUB_TOKEN` (see the [admin setup](#option-1--the-admin-panel-recommended)
+   above), then redeploy.
 
 Every push to `main` redeploys automatically; pull requests get preview URLs.
 

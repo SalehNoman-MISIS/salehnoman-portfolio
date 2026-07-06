@@ -1,0 +1,34 @@
+{
+  "moreProjects": [
+    {
+      "title": "BST / AVL Benchmarking Study",
+      "blurb": "Python + C++ study benchmarking binary-search-tree vs. AVL-tree operations on random and sorted datasets, with plotted results and a matched C++ runner for large runs.",
+      "tech": [
+        "Python",
+        "C++",
+        "Matplotlib"
+      ],
+      "github": "https://github.com/SalehNoman-MISIS/lab-work-lera"
+    },
+    {
+      "title": "Service-Provider Marketplace App",
+      "blurb": "Android marketplace that matches service providers with clients by category, price, location, availability and ratings.",
+      "tech": [
+        "Android",
+        "Java",
+        "Firebase"
+      ],
+      "github": null
+    },
+    {
+      "title": "Retail POS / Accounting System",
+      "blurb": "Point-of-sale and accounting system tracking daily sales, inventory and customer accounts — reduced manual errors for a retail business.",
+      "tech": [
+        "C#",
+        "SQL",
+        "Desktop"
+      ],
+      "github": null
+    }
+  ]
+}

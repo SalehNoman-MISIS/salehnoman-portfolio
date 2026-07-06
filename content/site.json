@@ -1,0 +1,22 @@
+{
+  "name": "Saleh Noman",
+  "monogram": "SN",
+  "role": "Data Scientist · Data & Automation Engineer",
+  "tagline": "Web Scraping / ETL · Machine Learning · AI-Assisted Development",
+  "valueProp": "I build end-to-end machine-learning, web-scraping and ETL systems — and ship production tools fast with AI coding assistants.",
+  "description": "Saleh Noman — Data Scientist and Data & Automation Engineer (M.Sc. Data Science, NUST MISIS, Red Diploma). I design and build the full pipeline: resilient web scraping, ETL with real quality gates, ML models, and the apps that put them to work.",
+  "location": "Moscow, Russia",
+  "locationDetail": "Moscow, Russia (Dolgoprudny)",
+  "email": "salehnoman22@gmail.com",
+  "phone": "+7 900 159-71-98",
+  "headshot": "/headshot.png",
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/salehnoman/",
+    "github": "https://github.com/SalehNoman-MISIS"
+  },
+  "resume": {
+    "en": "/resume/Saleh_Noman_Resume_EN_Visual.pdf",
+    "ru": "/resume/Saleh_Noman_Resume_RU_Visual.pdf"
+  },
+  "openTo": "Open to Data Science, ML Engineering, Data / Automation Engineering, Web Scraping, Full-stack and IT Support roles — Moscow and remote."
+}
