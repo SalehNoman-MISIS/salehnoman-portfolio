@@ -16,9 +16,9 @@ import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-// Canonical source for generated diagrams + copied figures.
-const SS = path.join(root, "assets", "screenshots");
 const PUB = path.join(root, "public");
+// Diagrams are written straight into the served screenshots folder.
+const SS = path.join(PUB, "screenshots");
 
 // ---------------------------------------------------------------------------
 // Brand palette + SVG kit
@@ -807,45 +807,60 @@ function monogramSvg(size, rounded = true) {
 }
 
 function ogSvg() {
+  // Dark, neural-vortex-inspired card matching the live hero.
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#EAF4FE"/><stop offset="1" stop-color="#FFFFFF"/>
-    </linearGradient>
+    <radialGradient id="bg" cx="72%" cy="0%" r="120%">
+      <stop offset="0" stop-color="#0c1c38"/><stop offset="0.5" stop-color="#081123"/><stop offset="1" stop-color="#05080f"/>
+    </radialGradient>
     <linearGradient id="mono" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${C.barStart}"/><stop offset="1" stop-color="${C.accentStrong}"/>
+      <stop offset="0" stop-color="#5B9BD5"/><stop offset="1" stop-color="#1F5FA6"/>
     </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#2f7fd6" stop-opacity="0.55"/><stop offset="1" stop-color="#2f7fd6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#37d0e0" stop-opacity="0.35"/><stop offset="1" stop-color="#37d0e0" stop-opacity="0"/>
+    </radialGradient>
     <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M48 0H0V48" fill="none" stroke="#2E73B8" stroke-opacity="0.06" stroke-width="1"/>
+      <path d="M48 0H0V48" fill="none" stroke="#5B9BD5" stroke-opacity="0.06" stroke-width="1"/>
     </pattern>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#grid)"/>
-  <circle cx="1090" cy="70" r="230" fill="#5B9BD5" opacity="0.14"/>
-  <circle cx="120" cy="600" r="180" fill="#9AC6EC" opacity="0.16"/>
+  <circle cx="980" cy="250" r="360" fill="url(#glow1)"/>
+  <circle cx="1160" cy="70" r="240" fill="url(#glow2)"/>
+  <!-- faint neural filaments -->
+  <g fill="none" stroke="#7fb8ee" stroke-opacity="0.28" stroke-width="2">
+    <path d="M760 430 C 880 330, 980 300, 1180 250"/>
+    <path d="M820 520 C 940 430, 1020 380, 1200 360"/>
+    <path d="M900 150 C 960 260, 1010 300, 1180 330"/>
+  </g>
+  <g fill="#9fd0f6" fill-opacity="0.5">
+    <circle cx="980" cy="300" r="4"/><circle cx="1080" cy="250" r="3"/><circle cx="900" cy="360" r="3"/>
+  </g>
   <rect x="80" y="86" width="96" height="96" rx="22" fill="url(#mono)"/>
   <text x="128" y="140" font-family="${FONT}" font-size="52" font-weight="800" fill="#ffffff" text-anchor="middle">SN</text>
-  <text x="196" y="128" font-family="${FONT}" font-size="30" font-weight="700" fill="${C.accentStrong}">Saleh Noman</text>
-  <text x="196" y="164" font-family="${FONT}" font-size="19" font-weight="500" fill="${C.muted}">Moscow · M.Sc. Data Science (Red Diploma)</text>
-  <text x="80" y="300" font-family="${FONT}" font-size="66" font-weight="800" fill="${C.navy}">Data Scientist &amp;</text>
-  <text x="80" y="374" font-family="${FONT}" font-size="66" font-weight="800" fill="${C.navy}">Automation Engineer</text>
-  <text x="80" y="430" font-family="${FONT}" font-size="25" font-weight="500" fill="${C.ink}">ML · web scraping · ETL · AI-assisted development</text>
+  <text x="196" y="128" font-family="${FONT}" font-size="30" font-weight="700" fill="#ffffff">Saleh Noman</text>
+  <text x="196" y="164" font-family="${FONT}" font-size="19" font-weight="500" fill="#9fb2c8">Moscow · M.Sc. Data Science (Red Diploma)</text>
+  <text x="80" y="300" font-family="${FONT}" font-size="66" font-weight="800" fill="#ffffff">Data Scientist &amp;</text>
+  <text x="80" y="374" font-family="${FONT}" font-size="66" font-weight="800" fill="#ffffff">Automation Engineer</text>
+  <text x="80" y="430" font-family="${FONT}" font-size="25" font-weight="500" fill="#82b6ec">Web scraping · lead generation · automation · ML</text>
   ${(() => {
-    // flow the stat chips left-to-right with measured widths + a gap
     const chips = ["100% Fortune-500 ATS detection", "8+ shipped projects", "GPA 5.0 / 5.0"];
     let x = 80;
     return chips
       .map((t) => {
         const w = Math.round(t.length * 11.4 + 48);
-        const el = `<rect x="${x}" y="486" width="${w}" height="52" rx="26" fill="#ffffff" stroke="${C.hairline}" stroke-width="2"/><text x="${
+        const el = `<rect x="${x}" y="486" width="${w}" height="52" rx="26" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1.5"/><text x="${
           x + w / 2
-        }" y="519" font-family="${FONT}" font-size="20" font-weight="600" fill="${C.accentStrong}" text-anchor="middle">${t}</text>`;
+        }" y="519" font-family="${FONT}" font-size="20" font-weight="600" fill="#dbe8f7" text-anchor="middle">${t}</text>`;
         x += w + 20;
         return el;
       })
       .join("");
   })()}
-  <rect x="0" y="614" width="1200" height="16" fill="${C.accent}"/>
+  <rect x="0" y="616" width="1200" height="14" fill="${C.accent}"/>
 </svg>`;
 }
 
@@ -954,19 +969,7 @@ async function main() {
     console.log("✓ headshot placeholder (public/headshot.png)");
   }
 
-  // 6. mirror screenshots into public/screenshots (served by Next.js)
-  const served = path.join(PUB, "screenshots");
-  async function copyDir(src, dst) {
-    await fs.mkdir(dst, { recursive: true });
-    for (const e of await fs.readdir(src, { withFileTypes: true })) {
-      const s = path.join(src, e.name);
-      const d = path.join(dst, e.name);
-      if (e.isDirectory()) await copyDir(s, d);
-      else await fs.copyFile(s, d);
-    }
-  }
-  await copyDir(SS, served);
-  console.log("✓ mirrored screenshots to public/screenshots");
+  console.log("✓ diagrams written into public/screenshots");
 }
 
 main().catch((e) => {
