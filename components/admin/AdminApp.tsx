@@ -9,16 +9,20 @@ import experienceJson from "@/content/experience.json";
 import educationJson from "@/content/education.json";
 import projectsJson from "@/content/projects.json";
 import moreJson from "@/content/more-projects.json";
+import servicesJson from "@/content/services.json";
+import testimonialsJson from "@/content/testimonials.json";
 
 type Content = Record<string, unknown>;
 const SECTIONS: { id: string; label: string; seed: unknown }[] = [
   { id: "site", label: "Site & Contact", seed: siteJson },
   { id: "about", label: "About", seed: aboutJson },
+  { id: "services", label: "Services", seed: servicesJson },
   { id: "skills", label: "Skills", seed: skillsJson },
   { id: "experience", label: "Experience", seed: experienceJson },
-  { id: "education", label: "Education", seed: educationJson },
   { id: "projects", label: "Projects", seed: projectsJson },
   { id: "more-projects", label: "More builds", seed: moreJson },
+  { id: "testimonials", label: "Reviews", seed: testimonialsJson },
+  { id: "education", label: "Education", seed: educationJson },
 ];
 
 type Status = "loading" | "unconfigured" | "login" | "ready";

@@ -9,9 +9,10 @@ export const site = siteData;
 /** Anchor navigation (structural — not part of editable content). */
 export const navLinks = [
   { href: "#about", label: "About" },
+  { href: "#services", label: "Services" },
   { href: "#skills", label: "Skills" },
   { href: "#experience", label: "Experience" },
   { href: "#projects", label: "Projects" },
-  { href: "#education", label: "Education" },
+  { href: "#reviews", label: "Reviews" },
   { href: "#contact", label: "Contact" },
 ] as const;

@@ -16,6 +16,8 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const [isDark, setIsDark] = useState(false);
+  // On the homepage, only show links whose section exists (some are conditional).
+  const [links, setLinks] = useState<readonly { href: string; label: string }[]>(navLinks);
 
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
@@ -32,6 +34,8 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
 
   useEffect(() => {
     if (!onHome) return;
+    // Drop nav links whose section isn't rendered (e.g. Reviews before any exist).
+    setLinks(navLinks.filter((l) => document.getElementById(l.href.replace("#", ""))));
     const ids = navLinks.map((l) => l.href.replace("#", ""));
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (!sections.length) return;
@@ -86,7 +90,7 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
         </motion.a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {navLinks.map((l) => {
+          {links.map((l) => {
             const on = active === l.href.replace("#", "");
             return (
               <a
@@ -160,7 +164,7 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
           className="overflow-hidden border-t border-[var(--hairline)] bg-[var(--page)] px-5 pb-4 pt-2 md:hidden"
         >
           <ul className="flex flex-col">
-            {navLinks.map((l) => (
+            {links.map((l) => (
               <li key={l.href}>
                 <a
                   href={hrefFor(l.href)}

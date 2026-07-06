@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Only these content files may be written.
-const ALLOWED = new Set(["site", "about", "skills", "experience", "education", "projects", "more-projects"]);
+const ALLOWED = new Set(["site", "about", "skills", "experience", "education", "projects", "more-projects", "services", "testimonials"]);
 
 export async function POST(req: Request) {
   const jar = await cookies();

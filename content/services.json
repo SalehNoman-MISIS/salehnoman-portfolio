@@ -1,0 +1,30 @@
+{
+  "eyebrow": "Services",
+  "title": "What I can build for you",
+  "intro": "I help businesses turn the open web into clean data and working automations — from resilient scrapers and lead lists to LinkedIn/social workflows, n8n pipelines and ML. Below are the platforms I've built scrapers and automations for.",
+  "offerings": [
+    { "icon": "spider", "title": "Web scraping at scale", "desc": "Resilient scrapers for e-commerce, social and SaaS — pagination, anti-bot handling, and exports to Google Sheets, a CMS, or webhooks." },
+    { "icon": "users", "title": "Lead generation", "desc": "Targeted B2B lead lists with enriched, verified contact data — emails, phones and social profiles, deduplicated and ready to use." },
+    { "icon": "linkedin", "title": "LinkedIn & social automation", "desc": "Profile and company data extraction plus outreach workflows across LinkedIn and other social platforms." },
+    { "icon": "workflow", "title": "n8n & RTILA workflows", "desc": "Low-code/no-code automations wired to your existing tools — triggers, enrichment, and hand-offs that run on a schedule." },
+    { "icon": "chart", "title": "Data, ETL & ML", "desc": "Cleaning, normalization and deduplication, dashboards, and machine-learning models with clear, explainable results." },
+    { "icon": "code", "title": "Custom tools & apps", "desc": "Packaged desktop and web tools — installers, dashboards and internal apps that put the data to work." }
+  ],
+  "platformsIntro": "Platforms I've built scrapers & automations for",
+  "platforms": [
+    { "name": "Amazon", "short": "a", "category": "E-commerce", "color": "#FF9900" },
+    { "name": "AliExpress", "short": "Ali", "category": "E-commerce", "color": "#E62E04" },
+    { "name": "eBay", "short": "eB", "category": "E-commerce", "color": "#E53238" },
+    { "name": "Etsy", "short": "E", "category": "E-commerce", "color": "#F1641E" },
+    { "name": "Walmart", "short": "W", "category": "E-commerce", "color": "#0071CE" },
+    { "name": "LinkedIn", "short": "in", "category": "Social · Leads", "color": "#0A66C2" },
+    { "name": "Instagram", "short": "IG", "category": "Social", "color": "#E1306C" },
+    { "name": "Facebook", "short": "f", "category": "Social", "color": "#1877F2" },
+    { "name": "Twitter / X", "short": "X", "category": "Social", "color": "#111827" },
+    { "name": "Google Maps", "short": "GM", "category": "Local · Leads", "color": "#34A853" },
+    { "name": "Yelp", "short": "Y", "category": "Local", "color": "#D32323" },
+    { "name": "Indeed", "short": "I", "category": "Jobs", "color": "#2164F3" },
+    { "name": "RTILA Studio", "short": "R", "category": "Automation platform", "color": "#6D28D9" },
+    { "name": "n8n", "short": "n8", "category": "Automation", "color": "#EA4B71" }
+  ]
+}

@@ -9,14 +9,17 @@
   "locationDetail": "Moscow, Russia (Dolgoprudny)",
   "email": "salehnoman22@gmail.com",
   "phone": "+7 900 159-71-98",
-  "headshot": "/headshot.png",
+  "headshot": "/uploads/photo-179599528-mr9o1iix.jpg",
+  "telegram": "sa_no_22",
   "links": {
     "linkedin": "https://www.linkedin.com/in/salehnoman/",
-    "github": "https://github.com/SalehNoman-MISIS"
+    "github": "https://github.com/SalehNoman-MISIS",
+    "telegram": "https://t.me/sa_no_22"
   },
   "resume": {
     "en": "/resume/Saleh_Noman_Resume_EN_Visual.pdf",
     "ru": "/resume/Saleh_Noman_Resume_RU_Visual.pdf"
   },
+  "calendly": "",
   "openTo": "Open to Data Science, ML Engineering, Data / Automation Engineering, Web Scraping, Full-stack and IT Support roles — Moscow and remote."
 }

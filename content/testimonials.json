@@ -1,0 +1,28 @@
+{
+  "eyebrow": "References",
+  "title": "What clients say",
+  "intro": "Feedback from clients and collaborators. Add your real Upwork / client reviews in the admin — placeholder entries stay hidden on the live site until you replace them.",
+  "items": [
+    {
+      "quote": "Replace this with a real review from your Upwork profile. Paste the client's own words here.",
+      "author": "Client name",
+      "role": "Company · Upwork",
+      "rating": 5,
+      "placeholder": true
+    },
+    {
+      "quote": "Another real client quote goes here — e.g. about a scraping or lead-generation project you delivered.",
+      "author": "Client name",
+      "role": "Role · Company",
+      "rating": 5,
+      "placeholder": true
+    },
+    {
+      "quote": "A third genuine testimonial about your automation / data work. Edit these in /admin under 'Reviews'.",
+      "author": "Client name",
+      "role": "Company",
+      "rating": 5,
+      "placeholder": true
+    }
+  ]
+}
