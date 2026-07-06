@@ -1,0 +1,242 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/index.css";
+
+/* ---------------------------------------------------------------------------
+   Brand design tokens (from design/brand-style-guide.md) — light + dark.
+   Theme is toggled by setting data-theme on <html>.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --color-accent: #2e73b8;
+  --color-accent-strong: #1f5fa6;
+  --color-navy: #123e73;
+}
+
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #ffffff;
+  --header-tint: #e8f2fc;
+  --card: #f3f9ff;
+  --hairline: #cbe0f5;
+  --ink: #22303f;
+  --muted: #5e6b7a;
+  --navy: #123e73;
+  --accent: #2e73b8;
+  --accent-strong: #1f5fa6;
+  --bar-start: #5b9bd5;
+  --bar-end: #9ac6ec;
+  --pill-bg: #ffffff;
+  --nav-bg: rgb(255 255 255 / 0.82);
+  --shadow: 0 1px 2px rgb(18 62 115 / 0.04), 0 8px 24px rgb(18 62 115 / 0.06);
+  --shadow-hover: 0 4px 12px rgb(18 62 115 / 0.08), 0 18px 40px rgb(18 62 115 / 0.12);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0e1b2a;
+  --header-tint: #13233a;
+  --card: #13233a;
+  --hairline: #24405f;
+  --ink: #e6eef7;
+  --muted: #9fb2c8;
+  --navy: #cfe2f7;
+  --accent: #4c90db;
+  --accent-strong: #6ba7e6;
+  --bar-start: #3e7cb8;
+  --bar-end: #7fb2e4;
+  --pill-bg: #17293f;
+  --nav-bg: rgb(14 27 42 / 0.82);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
+  --shadow-hover: 0 6px 16px rgb(0 0 0 / 0.4), 0 22px 48px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --page: #0e1b2a;
+    --header-tint: #13233a;
+    --card: #13233a;
+    --hairline: #24405f;
+    --ink: #e6eef7;
+    --muted: #9fb2c8;
+    --navy: #cfe2f7;
+    --accent: #4c90db;
+    --accent-strong: #6ba7e6;
+    --bar-start: #3e7cb8;
+    --bar-end: #7fb2e4;
+    --pill-bg: #17293f;
+    --nav-bg: rgb(14 27 42 / 0.82);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px rgb(0 0 0 / 0.35);
+    --shadow-hover: 0 6px 16px rgb(0 0 0 / 0.4), 0 22px 48px rgb(0 0 0 / 0.5);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--page);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+  :where(a, button, input, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.section-title {
+  color: var(--navy);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Scroll-reveal (progressive enhancement) — hidden only once JS marks the doc. */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+html.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html.js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero animated background (lightweight, respects reduced motion). */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--accent) 8%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--accent) 8%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
+  opacity: 0.7;
+}
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.5;
+}
+.blob-1 {
+  width: 26rem;
+  height: 26rem;
+  top: -8rem;
+  right: -6rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--bar-start) 55%, transparent), transparent 70%);
+  animation: float1 18s ease-in-out infinite;
+}
+.blob-2 {
+  width: 20rem;
+  height: 20rem;
+  bottom: -6rem;
+  left: -4rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--bar-end) 50%, transparent), transparent 70%);
+  animation: float2 22s ease-in-out infinite;
+}
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-2rem, 1.5rem); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(1.5rem, -1rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none; }
+}
+
+/* Minimal prose styling for markdown-ish deep-dive blocks. */
+.prose-body h2 {
+  color: var(--navy);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose-body p {
+  color: var(--ink);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.prose-body strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+.prose-body code {
+  background: var(--header-tint);
+  color: var(--accent-strong);
+  padding: 0.1rem 0.35rem;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
