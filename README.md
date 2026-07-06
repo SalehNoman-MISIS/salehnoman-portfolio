@@ -54,10 +54,12 @@ Two ways — a visual admin panel, or editing files directly.
 
 A password-protected GUI at **`/admin`** lets you edit **every section** (site,
 about, skills, experience, education, projects, more builds) with forms — add /
-remove / reorder list items, toggle flags, etc. Clicking **Save** commits the
-change to your GitHub repo, which triggers a Vercel redeploy — so the live site
-updates in about a minute. Only someone with your admin password can edit; the
-page is `noindex`.
+remove / reorder list items, toggle flags, etc. For any image field (project
+thumbnails, gallery shots, your headshot) you can **pick and upload a file
+directly** — it's committed to the repo and wired into that field. Clicking
+**Save** commits the change to your GitHub repo, which triggers a Vercel
+redeploy — so the live site updates in about a minute. Only someone with your
+admin password can edit; the page is `noindex`.
 
 **Setup (once):** set these environment variables (see `.env.example`):
 

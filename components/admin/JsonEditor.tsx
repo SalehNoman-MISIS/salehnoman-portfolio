@@ -1,9 +1,16 @@
 "use client";
 
+import { useRef, useState } from "react";
+import { assetSrc } from "@/lib/asset";
+
 /* A recursive, schema-free form editor for the content JSON. Renders inputs for
-   strings/numbers/booleans and add / remove / reorder controls for arrays. */
+   strings/numbers/booleans, add / remove / reorder controls for arrays, and an
+   image picker/uploader for image fields. */
 
 type Json = unknown;
+
+const IMAGE_KEY = /^(thumb|file|headshot|image|img|src|photo|avatar|logo|ogimage|og_image)$/i;
+const isImageValue = (v: string) => /\.(png|jpe?g|webp|gif|svg|avif)$/i.test(v);
 
 function humanize(key: string): string {
   return key
@@ -60,11 +67,13 @@ export default function JsonEditor({
   onChange,
   path = "",
   depth = 0,
+  slugCtx,
 }: {
   value: Json;
   onChange: (v: Json) => void;
   path?: string;
   depth?: number;
+  slugCtx?: string;
 }) {
   // primitives
   if (typeof value === "string") return <StringField value={value} onChange={onChange} path={path} />;
@@ -124,7 +133,7 @@ export default function JsonEditor({
               </div>
             )}
             <div className={primitive ? "flex-1" : ""}>
-              <JsonEditor value={item} onChange={(v) => set(i, v)} path={`${path}[${i}]`} depth={depth + 1} />
+              <JsonEditor value={item} onChange={(v) => set(i, v)} path={`${path}[${i}]`} depth={depth + 1} slugCtx={slugCtx} />
             </div>
             {primitive && (
               <div className="flex items-center gap-1 pt-0.5">
@@ -149,14 +158,20 @@ export default function JsonEditor({
   // objects
   if (value && typeof value === "object") {
     const obj = value as Record<string, Json>;
+    const nextSlug = typeof obj.slug === "string" ? obj.slug : slugCtx;
     return (
       <div className={depth === 0 ? "space-y-5" : "space-y-3"}>
         {Object.entries(obj).map(([k, v]) => {
           const nested = v && typeof v === "object";
+          const isImage = typeof v === "string" && (IMAGE_KEY.test(k) || isImageValue(v));
           return (
             <div key={k} className={nested ? "rounded-xl border border-[var(--hairline)] bg-[var(--card)] p-4" : ""}>
               <label className="mb-1.5 block text-sm font-semibold text-[var(--navy)]">{humanize(k)}</label>
-              <JsonEditor value={v} onChange={(nv) => onChange({ ...obj, [k]: nv })} path={path ? `${path}.${k}` : k} depth={depth + 1} />
+              {isImage ? (
+                <ImageField value={v as string} onChange={(nv) => onChange({ ...obj, [k]: nv })} slugCtx={nextSlug} />
+              ) : (
+                <JsonEditor value={v} onChange={(nv) => onChange({ ...obj, [k]: nv })} path={path ? `${path}.${k}` : k} depth={depth + 1} slugCtx={nextSlug} />
+              )}
             </div>
           );
         })}
@@ -165,6 +180,78 @@ export default function JsonEditor({
   }
 
   return <span className="text-xs text-[var(--muted)]">Unsupported value</span>;
+}
+
+function ImageField({
+  value,
+  onChange,
+  slugCtx,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  slugCtx?: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const preview = value ? assetSrc(slugCtx ?? "", value) : "";
+
+  async function upload(file: File) {
+    setBusy(true);
+    setErr("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      if (slugCtx) fd.append("folder", `screenshots/${slugCtx}`);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (res.ok) onChange(data.path);
+      else setErr(data.error || "Upload failed.");
+    } catch {
+      setErr("Network error during upload.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="flex items-start gap-3">
+      {/* preview */}
+      <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--header-tint)]">
+        {preview ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={preview} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-[10px] text-[var(--muted)]">no image</span>
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <input className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} placeholder="filename or /path" />
+        <div className="mt-2 flex items-center gap-2">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) upload(f);
+              e.target.value = "";
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--hairline)] bg-[var(--page)] px-3 py-1.5 text-xs font-semibold text-[var(--accent-strong)] transition-colors hover:border-[var(--accent)] disabled:opacity-50"
+          >
+            {busy ? "Uploading…" : "⬆ Upload image"}
+          </button>
+          {err && <span className="text-xs text-red-500">{err}</span>}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function RowBtn({

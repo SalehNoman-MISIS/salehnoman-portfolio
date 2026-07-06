@@ -2,12 +2,13 @@ import type { Project } from "@/data/projects";
 import SmartImage from "./SmartImage";
 import Icon from "./Icon";
 import PointerSpotlight from "./PointerSpotlight";
+import { assetSrc } from "@/lib/asset";
 
 export default function ProjectCard({ project, index = 0 }: { project: Project; index?: number }) {
   const href = `/projects/${project.slug}`;
   const pills = project.tech.slice(0, 4);
   const extra = project.tech.length - pills.length;
-  const thumb = `/screenshots/${project.slug}/${project.thumb}`;
+  const thumb = assetSrc(project.slug, project.thumb);
 
   return (
     <article

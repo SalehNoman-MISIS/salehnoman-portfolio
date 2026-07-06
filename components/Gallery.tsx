@@ -4,10 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import type { GalleryItem } from "@/data/projects";
 import SmartImage from "./SmartImage";
 import Icon from "./Icon";
+import { assetSrc } from "@/lib/asset";
 
 export default function Gallery({ slug, items }: { slug: string; items: GalleryItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const srcOf = (file: string) => `/screenshots/${slug}/${file}`;
+  const srcOf = (file: string) => assetSrc(slug, file);
 
   const close = useCallback(() => setOpenIndex(null), []);
 
