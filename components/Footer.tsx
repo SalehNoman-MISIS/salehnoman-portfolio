@@ -1,5 +1,8 @@
+import Image from "next/image";
 import { site, navLinks } from "@/data/site";
 import Icon from "./Icon";
+
+const logo = (site as { logo?: string }).logo;
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -9,7 +12,11 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <a href="/" className="flex items-center gap-2.5">
-              <span className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold text-white">{site.monogram}</span>
+              {logo ? (
+                <Image src={logo} alt="" width={36} height={36} className="size-9 rounded-lg object-contain ring-1 ring-[var(--hairline)]" />
+              ) : (
+                <span className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold text-white">{site.monogram}</span>
+              )}
               <span className="text-sm font-bold text-[var(--navy)]">{site.name}</span>
             </a>
             <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">

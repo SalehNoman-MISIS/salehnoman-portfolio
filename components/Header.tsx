@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, useScroll, useSpring } from "motion/react";
 import { site, navLinks } from "@/data/site";
 import Icon from "./Icon";
+
+const logo = (site as { logo?: string }).logo;
 
 function currentTheme(): "light" | "dark" {
   const attr = document.documentElement.getAttribute("data-theme");
@@ -80,11 +83,24 @@ export default function Header({ onHome = false }: { onHome?: boolean }) {
           whileTap={{ scale: 0.97 }}
         >
           <motion.span
-            className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold tracking-tight text-white shadow-sm"
+            className="block size-9 shrink-0"
             whileHover={{ rotate: -6 }}
             transition={{ type: "spring", stiffness: 300, damping: 15 }}
           >
-            {site.monogram}
+            {logo ? (
+              <Image
+                src={logo}
+                alt=""
+                width={36}
+                height={36}
+                priority
+                className="size-9 rounded-lg object-contain ring-1 ring-[var(--hairline)]"
+              />
+            ) : (
+              <span className="grid size-9 place-items-center rounded-lg bg-[var(--accent)] text-sm font-extrabold tracking-tight text-white shadow-sm">
+                {site.monogram}
+              </span>
+            )}
           </motion.span>
           <span className="hidden text-sm font-bold text-[var(--navy)] sm:block">{site.name}</span>
         </motion.a>

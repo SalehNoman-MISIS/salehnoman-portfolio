@@ -32,19 +32,19 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.role}`,
     description: site.description,
     url: "/",
-    images: [{ url: "/og-image.png?v=2", width: 1200, height: 630, alt: `${site.name} — ${site.role}` }],
+    images: [{ url: "/og-image.png?v=3", width: 1200, height: 630, alt: `${site.name} — ${site.role}` }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.role}`,
     description: site.description,
-    images: ["/og-image.png?v=2"],
+    images: ["/og-image.png?v=3"],
   },
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
     ],
     apple: "/apple-touch-icon.png",
   },

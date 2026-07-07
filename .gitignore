@@ -37,3 +37,6 @@ yarn-error.log*
 
 # original resume source files (only the visual PDFs are served on the site)
 assets/resume/*.docx
+
+# logo design source (keep local)
+Logo Pack/

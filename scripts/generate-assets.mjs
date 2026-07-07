@@ -904,15 +904,16 @@ async function main() {
 
   await fs.mkdir(PUB, { recursive: true });
 
-  // 2. favicon.svg + apple touch + png icons
-  await fs.writeFile(path.join(PUB, "favicon.svg"), monogramSvg(64), "utf8");
+  // 2. favicons + app icons — derived from public/logo.png if present, else the
+  //    built-in SN monogram.
+  const logoPath = path.join(PUB, "logo.png");
+  const hasLogo = await fs.access(logoPath).then(() => true).catch(() => false);
   const iconSizes = [16, 32, 48, 180, 192, 512];
   const pngBufs = {};
   for (const s of iconSizes) {
-    pngBufs[s] = await sharp(Buffer.from(monogramSvg(s)))
-      .resize(s, s)
-      .png()
-      .toBuffer();
+    pngBufs[s] = hasLogo
+      ? await sharp(logoPath).resize(s, s, { fit: "contain", background: "#ffffff" }).flatten({ background: "#ffffff" }).png().toBuffer()
+      : await sharp(Buffer.from(monogramSvg(s))).resize(s, s).png().toBuffer();
   }
   await fs.writeFile(path.join(PUB, "apple-touch-icon.png"), pngBufs[180]);
   await fs.writeFile(path.join(PUB, "icon-192.png"), pngBufs[192]);
@@ -926,12 +927,34 @@ async function main() {
       { size: 48, buf: pngBufs[48] },
     ]),
   );
-  console.log("✓ favicon set (svg, ico, png, apple-touch)");
+  // A custom raster logo can't be an SVG favicon — remove the stale one so
+  // browsers fall back to the .ico/.png (the new logo).
+  if (hasLogo) {
+    await fs.rm(path.join(PUB, "favicon.svg"), { force: true });
+  } else {
+    await fs.writeFile(path.join(PUB, "favicon.svg"), monogramSvg(64), "utf8");
+  }
+  console.log(`✓ favicon set from ${hasLogo ? "logo.png" : "monogram"}`);
 
-  // 3. OG image
-  await sharp(Buffer.from(ogSvg()))
-    .png()
-    .toFile(path.join(PUB, "og-image.png"));
+  // 3. OG image — composite the logo chip over the drawn monogram when present.
+  let ogBuf = await sharp(Buffer.from(ogSvg())).png().toBuffer();
+  if (hasLogo) {
+    const sz = 96;
+    const rounded = await sharp(logoPath)
+      .resize(sz, sz, { fit: "cover" })
+      .composite([
+        {
+          input: Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}"><rect width="${sz}" height="${sz}" rx="22" fill="#fff"/></svg>`,
+          ),
+          blend: "dest-in",
+        },
+      ])
+      .png()
+      .toBuffer();
+    ogBuf = await sharp(ogBuf).composite([{ input: rounded, left: 80, top: 86 }]).png().toBuffer();
+  }
+  await fs.writeFile(path.join(PUB, "og-image.png"), ogBuf);
   console.log("✓ og-image.png (1200×630)");
 
   // 4. résumé PDFs → public/resume
