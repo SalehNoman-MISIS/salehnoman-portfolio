@@ -110,6 +110,25 @@
   text-transform: uppercase;
 }
 
+/* Theme-aware logo mark: navy on light backgrounds, white on dark. */
+.logo-dark {
+  display: none;
+}
+:root[data-theme="dark"] .logo-light {
+  display: none;
+}
+:root[data-theme="dark"] .logo-dark {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-light {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .logo-dark {
+    display: block;
+  }
+}
+
 /* Scroll-reveal (progressive enhancement) — hidden only once JS marks the doc. */
 html.js [data-reveal] {
   opacity: 0;

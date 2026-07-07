@@ -32,14 +32,14 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.role}`,
     description: site.description,
     url: "/",
-    images: [{ url: "/og-image.png?v=3", width: 1200, height: 630, alt: `${site.name} — ${site.role}` }],
+    images: [{ url: "/og-image.png?v=4", width: 1200, height: 630, alt: `${site.name} — ${site.role}` }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.role}`,
     description: site.description,
-    images: ["/og-image.png?v=3"],
+    images: ["/og-image.png?v=4"],
   },
   icons: {
     icon: [

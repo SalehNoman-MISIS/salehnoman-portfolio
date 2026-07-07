@@ -840,7 +840,6 @@ function ogSvg() {
     <circle cx="980" cy="300" r="4"/><circle cx="1080" cy="250" r="3"/><circle cx="900" cy="360" r="3"/>
   </g>
   <rect x="80" y="86" width="96" height="96" rx="22" fill="url(#mono)"/>
-  <text x="128" y="140" font-family="${FONT}" font-size="52" font-weight="800" fill="#ffffff" text-anchor="middle">SN</text>
   <text x="196" y="128" font-family="${FONT}" font-size="30" font-weight="700" fill="#ffffff">Saleh Noman</text>
   <text x="196" y="164" font-family="${FONT}" font-size="19" font-weight="500" fill="#9fb2c8">Moscow · M.Sc. Data Science (Red Diploma)</text>
   <text x="80" y="300" font-family="${FONT}" font-size="66" font-weight="800" fill="#ffffff">Data Scientist &amp;</text>
@@ -904,15 +903,15 @@ async function main() {
 
   await fs.mkdir(PUB, { recursive: true });
 
-  // 2. favicons + app icons — derived from public/logo.png if present, else the
+  // 2. favicons + app icons — derived from the badge logo if present, else the
   //    built-in SN monogram.
-  const logoPath = path.join(PUB, "logo.png");
+  const logoPath = path.join(PUB, "logo-badge.png");
   const hasLogo = await fs.access(logoPath).then(() => true).catch(() => false);
   const iconSizes = [16, 32, 48, 180, 192, 512];
   const pngBufs = {};
   for (const s of iconSizes) {
     pngBufs[s] = hasLogo
-      ? await sharp(logoPath).resize(s, s, { fit: "contain", background: "#ffffff" }).flatten({ background: "#ffffff" }).png().toBuffer()
+      ? await sharp(logoPath).resize(s, s, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
       : await sharp(Buffer.from(monogramSvg(s))).resize(s, s).png().toBuffer();
   }
   await fs.writeFile(path.join(PUB, "apple-touch-icon.png"), pngBufs[180]);
@@ -936,23 +935,18 @@ async function main() {
   }
   console.log(`✓ favicon set from ${hasLogo ? "logo.png" : "monogram"}`);
 
-  // 3. OG image — composite the logo chip over the drawn monogram when present.
+  // 3. OG image — overlay the white SN mark on the blue chip drawn in the SVG.
   let ogBuf = await sharp(Buffer.from(ogSvg())).png().toBuffer();
-  if (hasLogo) {
-    const sz = 96;
-    const rounded = await sharp(logoPath)
-      .resize(sz, sz, { fit: "cover" })
-      .composite([
-        {
-          input: Buffer.from(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${sz}"><rect width="${sz}" height="${sz}" rx="22" fill="#fff"/></svg>`,
-          ),
-          blend: "dest-in",
-        },
-      ])
+  const ogMarkPath = path.join(PUB, "logo-mark-white.png");
+  const hasMark = await fs.access(ogMarkPath).then(() => true).catch(() => false);
+  if (hasMark) {
+    const inner = 74; // fit inside the 96px chip with padding
+    const mark = await sharp(ogMarkPath)
+      .resize(inner, inner, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
       .png()
       .toBuffer();
-    ogBuf = await sharp(ogBuf).composite([{ input: rounded, left: 80, top: 86 }]).png().toBuffer();
+    const off = Math.round((96 - inner) / 2);
+    ogBuf = await sharp(ogBuf).composite([{ input: mark, left: 80 + off, top: 86 + off }]).png().toBuffer();
   }
   await fs.writeFile(path.join(PUB, "og-image.png"), ogBuf);
   console.log("✓ og-image.png (1200×630)");

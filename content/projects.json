@@ -186,7 +186,7 @@
         "PyInstaller"
       ],
       "repoVisibility": "private",
-      "thumb": "source-selection.png",
+      "thumb": "01-source.png",
       "metrics": [
         {
           "value": "5-step",
@@ -214,19 +214,29 @@
       "results": "A real product delivered to clients — end-to-end from crawl to verified, exportable data. The step-by-step wizard (source → connect → fields → enrichment → export) makes it usable by non-developers, the visual filter builder replaces hand-written queries, and the licensing layer made per-client distribution safe.",
       "gallery": [
         {
-          "file": "source-selection.png",
-          "alt": "Wizard step 1: choose a data source — CMS, URL list, or Google Maps finder.",
+          "file": "01-source.png",
+          "alt": "The enrichment wizard step 1 — choosing a data source.",
           "caption": "Step 1 — choose a source: CMS collection, URL list, or Google-Maps finder."
         },
         {
-          "file": "url-input.png",
-          "alt": "Wizard step for pasting a list of website URLs to enrich.",
-          "caption": "Paste a URL list to extract and verify contacts in bulk."
+          "file": "02-connect-directus.png",
+          "alt": "Connecting the tool to a Directus CMS.",
+          "caption": "Connect to a headless CMS (Directus) — credentials encrypted, never stored."
         },
         {
-          "file": "directus-connect.png",
-          "alt": "Form to connect to a Directus CMS instance with credentials never stored.",
-          "caption": "Connect to a headless CMS — credentials encrypted, never stored."
+          "file": "03-preview-confirm.png",
+          "alt": "Preview and confirm the selected records before enrichment.",
+          "caption": "Preview & confirm the records before enrichment."
+        },
+        {
+          "file": "04-enrich.png",
+          "alt": "Live enrichment progress extracting contacts from websites.",
+          "caption": "Live enrichment — emails, phones and socials extracted, with progress and an activity log."
+        },
+        {
+          "file": "05-export.png",
+          "alt": "Enrichment complete with export options and a contacts preview.",
+          "caption": "Enrichment complete — export to CSV / JSON / TSV with a contacts preview."
         },
         {
           "file": "gmaps-finder.svg",
