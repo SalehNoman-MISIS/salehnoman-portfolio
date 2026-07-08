@@ -43,6 +43,7 @@ export default function InteractiveNeuralVortex({ className = "" }: { className?
       uniform float u_ratio;
       uniform vec2 u_pointer_position;
       uniform float u_scroll_progress;
+      uniform float u_dark;
 
       vec2 rotate(vec2 uv, float th) {
         return mat2(cos(th), sin(th), -sin(th), cos(th)) * uv;
@@ -78,10 +79,16 @@ export default function InteractiveNeuralVortex({ className = "" }: { className?
         noise = max(.0, noise - .5);
         noise *= (1. - length(vUv - .5));
 
-        // brand palette: deep blue base, shifting toward a light cyan-blue
-        color = vec3(0.09, 0.26, 0.52);
-        color = mix(color, vec3(0.24, 0.62, 0.95), 0.42 + 0.14 * sin(2.0 * u_scroll_progress + 1.2));
-        color += vec3(0.05, 0.14, 0.42) * sin(2.0 * u_scroll_progress + 1.5);
+        // brand palette — brighter on dark theme, deeper dark-blue on light theme
+        if (u_dark > 0.5) {
+          color = vec3(0.09, 0.26, 0.52);
+          color = mix(color, vec3(0.24, 0.62, 0.95), 0.42 + 0.14 * sin(2.0 * u_scroll_progress + 1.2));
+          color += vec3(0.05, 0.14, 0.42) * sin(2.0 * u_scroll_progress + 1.5);
+        } else {
+          color = vec3(0.05, 0.15, 0.42);
+          color = mix(color, vec3(0.10, 0.34, 0.72), 0.42 + 0.14 * sin(2.0 * u_scroll_progress + 1.2));
+          color += vec3(0.03, 0.09, 0.30) * sin(2.0 * u_scroll_progress + 1.5);
+        }
         color = color * noise;
         gl_FragColor = vec4(color, noise);
       }
@@ -128,6 +135,22 @@ export default function InteractiveNeuralVortex({ className = "" }: { className?
     const uRatio = gl.getUniformLocation(program, "u_ratio");
     const uPointer = gl.getUniformLocation(program, "u_pointer_position");
     const uScroll = gl.getUniformLocation(program, "u_scroll_progress");
+    const uDark = gl.getUniformLocation(program, "u_dark");
+
+    // Track the active theme so the filaments recolor live on toggle
+    // (bright blue on dark, deep dark-blue on light).
+    const isDark = () => {
+      const attr = document.documentElement.getAttribute("data-theme");
+      if (attr === "dark") return true;
+      if (attr === "light") return false;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    };
+    const darkRef = { current: isDark() };
+    const themeObserver = new MutationObserver(() => (darkRef.current = isDark()));
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const schemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onScheme = () => (darkRef.current = isDark());
+    schemeMq.addEventListener("change", onScheme);
 
     // Size to the *container*, not the whole window.
     const resize = () => {
@@ -152,6 +175,7 @@ export default function InteractiveNeuralVortex({ className = "" }: { className?
       gl.uniform1f(uTime, now);
       gl.uniform2f(uPointer, pointer.current.x / w, 1 - pointer.current.y / h);
       gl.uniform1f(uScroll, window.scrollY / (2 * window.innerHeight));
+      gl.uniform1f(uDark, darkRef.current ? 1 : 0);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
 
@@ -215,6 +239,8 @@ export default function InteractiveNeuralVortex({ className = "" }: { className?
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       io.disconnect();
+      themeObserver.disconnect();
+      schemeMq.removeEventListener("change", onScheme);
       window.removeEventListener("pointermove", onPointer);
       window.removeEventListener("touchmove", onTouch);
       gl.deleteProgram(program);

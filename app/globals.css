@@ -178,6 +178,19 @@ html.js [data-reveal].is-visible {
   }
 }
 
+/* Hero band background — light in light theme, deep navy in dark theme. */
+.hero-band {
+  background: linear-gradient(180deg, var(--header-tint) 0%, var(--page) 100%);
+}
+:root[data-theme="dark"] .hero-band {
+  background: radial-gradient(125% 120% at 72% 0%, #0c1c38 0%, #081123 48%, #05080f 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-band {
+    background: radial-gradient(125% 120% at 72% 0%, #0c1c38 0%, #081123 48%, #05080f 100%);
+  }
+}
+
 /* Hero animated background (lightweight, respects reduced motion). */
 .hero-bg {
   position: absolute;
