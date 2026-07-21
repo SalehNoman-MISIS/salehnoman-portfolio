@@ -43,12 +43,8 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-[var(--hairline)] pt-6 text-xs text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 border-t border-[var(--hairline)] pt-6 text-xs text-[var(--muted)]">
           <p>© {year} {site.name}. All rights reserved.</p>
-          <p className="inline-flex items-center gap-1.5">
-            Built with <span className="font-medium text-[var(--accent-strong)]">Next.js</span> &amp;
-            <span className="font-medium text-[var(--accent-strong)]">Tailwind CSS</span> · Deployed on Vercel
-          </p>
         </div>
       </div>
     </footer>
